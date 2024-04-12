@@ -1,0 +1,24 @@
+{
+  "name": "cadastro-heroi",
+  "version": "1.0.0",
+  "description": "This application is a CRUD to create a heros database",
+  "main": "src/index.js",
+  "type": "module",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch --no-warnings src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "register-hero"
+  },
+  "author": "Christopher Feitosa do Monte",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.3.0"
+  }
+}
