@@ -5,11 +5,11 @@ export const getHeroes = async (id) => {
         let heroes
 
         if (id)
-            heroes = await Hero.find({name: "Christopher"})
+            heroes = await Hero.findById(id).exec()
         else
-            heroes = await Hero.find()
+            heroes = await Hero.find().exec()
 
-        return heroes
+        return typeof(heroes) == Array ? heroes : [heroes]
 
     } catch (error) {
         throw error
@@ -32,9 +32,33 @@ export const postHero = async (hero) => {
     }
 }
 
+export const updateHero = async (id, hero) => {
+    try {
+        const theHero = await Hero.findById(id).exec()
+
+        theHero.name = hero.name
+        theHero.secretName = hero.secretName
+        theHero.gender = hero.gender
+        theHero.birthDate = hero.birthDate
+        theHero.superPowers = hero.superPowers
+
+        theHero.save()
+
+        return theHero
+
+    } catch (error) {
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+
+    }
+}
+
 export const deleteHero = async (id) => {
     try {
-        await new Hero.findByIdAndDelete(id)
+        await new Hero.findByIdAndDelete(id).exec()
     } catch (error) {
 
         return res.status(500).json({

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { deleteHero, getHeroes, postHero } from '../controllers/heroController.js'
+import { deleteHero, getHeroes, postHero, updateHero } from '../controllers/heroController.js'
 
 const router = Router()
 
@@ -57,7 +57,7 @@ router.post('/', async (req, res) => {
         const heroDTO = {
             "name": req.body.name ,
             "secretName": req.body.secretName,
-            "gender": req.body.gender,
+            "gender": req.body.gender.toLowerCase() == "male" ? true : false,
             "birthDate": new Date(year, month - 1, day),
             "superPowers": req.body.superPowers
         }
@@ -65,6 +65,64 @@ router.post('/', async (req, res) => {
         const hero = await postHero(heroDTO)
 
         return res.status(201).json(hero)
+
+    } catch (error) {
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+
+    }
+})
+
+router.put('/', async (req, res) => {
+    try {
+        
+        if (!req.query || !req.query.hero_id) {
+            return res.status(400).json({
+                success: false,
+                message: 'The query statement \'hero_id\' is not found'
+            })
+        }
+        var id = req.query.hero_id
+
+        var validate = []
+        if (req.body) {
+            validate = [
+                !!req.body.name ,
+                !!req.body.secretName,
+                !!req.body.gender,
+                !!req.body.birthDate,
+                !!req.body.superPowers
+            ]
+        }
+
+        if (validate.length == 0 || validate.includes(false)) {
+            return res.status(400).json({
+                success: false,
+                message: 'The JSON is not valid'
+            })
+        }
+
+        let birthDate = req.body.birthDate.toString()
+        const [day, month, year] = birthDate.split('/');
+        
+        const heroDTO = {
+            "name": req.body.name ,
+            "secretName": req.body.secretName,
+            "gender": req.body.gender.toLowerCase() == "male" ? true : false,
+            "birthDate": new Date(year, month - 1, day),
+            "superPowers": req.body.superPowers
+        }
+
+        const hero = await updateHero(id, heroDTO)
+
+        return res.status(200).json({
+            success: true,
+            message: 'The hero has been updated',
+            hero: hero
+        })
 
     } catch (error) {
 
