@@ -7,19 +7,24 @@ router.get('/', async (req, res) => {
     try {
         let id
 
-        if (req.query && req.query.hero_id)
+        if (req.query && req.query.hero_id) {
             id = req.query.hero_id
+        }
 
         const heroes = await getHeroes(id)
 
-        return res.status(200).json( heroes.length > 0 ? {
-            success: true,
-            message: 'This is your hero',
-            heroes: heroes
-        } : {
-            success: true,
-            message: 'Don\'t have any heroes found'
-        } )
+        if (heroes && heroes.length > 0) {
+            return res.status(200).json({
+                success: true,
+                message: 'This is your hero',
+                heroes: heroes
+            })
+        } else {
+            return res.status(200).json({
+                success: true,
+                message: 'Don\'t have any heroes found'
+            })
+        }
 
     } catch (error) {
 
@@ -45,11 +50,12 @@ router.post('/', async (req, res) => {
             ]
         }
 
-        if (validate.length == 0 || validate.includes(false))
+        if (validate.length == 0 || validate.includes(false)) {
             return res.status(400).json({
                 success: false,
                 message: 'The JSON is not valid'
             })
+        }
         
         let birthDate = req.body.birthDate.toString()
         const [day, month, year] = birthDate.split('/');
