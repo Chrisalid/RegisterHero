@@ -14,9 +14,12 @@ const heroSchema = new Schema({
         type: Boolean,
         required: true
     },
-    birthDate: Date,
     superPowers: {
         type: [String],
+        required: true
+    },
+    birthDate: {
+        type: Date,
         required: true
     }
 });
